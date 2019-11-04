@@ -8,6 +8,8 @@
 
 class UCameraComponent;
 class USkeletalMeshComponent;
+class UParticleSystemComponent;
+class AFPSHUD;
 
 UCLASS()
 class FPSPROJECT_API AFPSCharacter : public ACharacter
@@ -72,6 +74,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	UParticleSystemComponent* MuzzleFlash;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+	TSubclassOf<class AFPSBulletHole> BulletHole;
+
+	//UPROPERTY(EditDefaultsOnly, Category = "HUD")
+	//AFPSHUD* HUD = nullptr;
+
 	FVector PlayerViewLocation;
 	FRotator PlayerViewRotation;
 	FVector LineTraceEnd;
@@ -86,8 +94,8 @@ public:
 	bool bEndAutoFire = false;
 	bool bTimerExpired;
 
-	int StartingAmmo = 32;
-	int Ammo;
+	int32 StartingAmmo = 32;
+	int32 Ammo = 0;
 	bool bOutOfAmmo = false;
 	bool bIsReloading = false;
 	bool bReloadTimerExpired;

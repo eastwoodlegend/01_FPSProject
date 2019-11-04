@@ -20,4 +20,14 @@ void AFPSHUD::DrawHUD()
 
 		Canvas->DrawItem(TileItem);
 	}
+
+	auto AmmoText = FString("Ammo: ");
+	AmmoText.AppendInt(Ammo);
+
+	DrawText(AmmoText, FLinearColor::Yellow, 0.f, 0.f);
+}
+
+void AFPSHUD::UpdateAmmo(int Value)
+{
+	Ammo = Value;
 }

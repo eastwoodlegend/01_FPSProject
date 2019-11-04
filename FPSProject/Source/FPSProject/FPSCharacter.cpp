@@ -14,6 +14,8 @@
 #include "GameFramework/PlayerController.h"
 #include "TimerManager.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "FPSBulletHole.h"
+#include "FPSHUD.h"
 
 //TODO remove after debug line testing.
 //#include "DrawDebugHelpers.h" 
@@ -47,18 +49,14 @@ AFPSCharacter::AFPSCharacter()
 	
 	GetMesh()->SetOwnerNoSee(true);
 	Ammo = StartingAmmo;
+
+	//HUD->UpdateAmmo(Ammo);
 }
 
 // Called when the game starts or when spawned
 void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("We are using FPSCharacter."));
-	}
-
 }
 
 // Called every frame
@@ -151,6 +149,8 @@ void AFPSCharacter::Fire()
 		{
 			PrimComp->AddImpulseAtLocation(Hit.Location * Magnitude, Hit.ImpactPoint);
 			UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
+			auto BulletHoleMark = GetWorld()->SpawnActor<AFPSBulletHole>(BulletHole, Hit.Location, FRotator::ZeroRotator);
+			BulletHoleMark->AttachToActor(ActorHit, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 		}
 
 		if (--Ammo == 0)

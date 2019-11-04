@@ -17,9 +17,14 @@ class FPSPROJECT_API AFPSHUD : public AHUD
 public:
 
 	virtual void DrawHUD() override;
-	
+	void UpdateAmmo(int Value);
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* CrosshairTexture;
+
+private:
+
+	int32 Ammo = 0;
 };
