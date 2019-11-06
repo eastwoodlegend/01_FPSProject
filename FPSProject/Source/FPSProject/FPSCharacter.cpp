@@ -50,7 +50,6 @@ AFPSCharacter::AFPSCharacter()
 	GetMesh()->SetOwnerNoSee(true);
 	Ammo = StartingAmmo;
 
-	//HUD->UpdateAmmo(Ammo);
 }
 
 // Called when the game starts or when spawned
@@ -86,6 +85,11 @@ void AFPSCharacter::Tick(float DeltaTime)
 	{
 		bIsReloading = false;
 	}
+}
+
+int32 AFPSCharacter::GetAmmo()
+{
+	return Ammo;
 }
 
 // Called to bind functionality to input
@@ -130,6 +134,8 @@ void AFPSCharacter::Fire()
 {
 	if (!bOutOfAmmo && !bIsReloading)
 	{
+		--Ammo;
+		//HUD->UpdateAmmo(Ammo);
 		UE_LOG(LogTemp, Warning, TEXT("Rounds Left: %i"), Ammo);
 		MuzzleFlash->ActivateSystem(false);
 		if (bAutoFire)
@@ -153,7 +159,7 @@ void AFPSCharacter::Fire()
 			BulletHoleMark->AttachToActor(ActorHit, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
 		}
 
-		if (--Ammo == 0)
+		if (Ammo == 0)
 		{
 			bOutOfAmmo = true;
 		}
@@ -182,7 +188,7 @@ void AFPSCharacter::TimerExpired()
 
 void AFPSCharacter::Reload()
 {
-	Ammo = StartingAmmo;
+	
 	bOutOfAmmo = false;
 	bIsReloading = true;
 	FTimerHandle Timer;
@@ -193,4 +199,5 @@ void AFPSCharacter::Reload()
 void AFPSCharacter::ReloadTimerExpired()
 {
 	bReloadTimerExpired = true;
+	Ammo = StartingAmmo;
 }

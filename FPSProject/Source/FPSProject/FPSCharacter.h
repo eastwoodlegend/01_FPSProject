@@ -28,6 +28,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintPure, Category = "Ammo")
+	int32 GetAmmo();
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -76,9 +79,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	TSubclassOf<class AFPSBulletHole> BulletHole;
-
-	//UPROPERTY(EditDefaultsOnly, Category = "HUD")
-	//AFPSHUD* HUD = nullptr;
 
 	FVector PlayerViewLocation;
 	FRotator PlayerViewRotation;

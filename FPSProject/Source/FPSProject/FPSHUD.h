@@ -17,6 +17,9 @@ class FPSPROJECT_API AFPSHUD : public AHUD
 public:
 
 	virtual void DrawHUD() override;
+
+	virtual void Tick(float DeltaTime) override;
+
 	void UpdateAmmo(int Value);
 
 protected:
@@ -25,6 +28,7 @@ protected:
 	UTexture2D* CrosshairTexture;
 
 private:
+
 
 	int32 Ammo = 0;
 };
