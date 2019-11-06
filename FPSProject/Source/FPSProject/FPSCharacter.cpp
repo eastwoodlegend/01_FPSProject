@@ -153,10 +153,12 @@ void AFPSCharacter::Fire()
 		}
 		if (PrimComp)
 		{
+			PrimComp->bIgnoreRadialImpulse = true;
 			PrimComp->AddImpulseAtLocation(Hit.Location * Magnitude, Hit.ImpactPoint);
 			UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
 			auto BulletHoleMark = GetWorld()->SpawnActor<AFPSBulletHole>(BulletHole, Hit.Location, FRotator::ZeroRotator);
 			BulletHoleMark->AttachToActor(ActorHit, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
+			
 		}
 
 		if (Ammo == 0)
@@ -188,12 +190,14 @@ void AFPSCharacter::TimerExpired()
 
 void AFPSCharacter::Reload()
 {
-	
-	bOutOfAmmo = false;
-	bIsReloading = true;
-	FTimerHandle Timer;
-	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AFPSCharacter::ReloadTimerExpired, 2.f, false);
-	bReloadTimerExpired = false;
+	if (Ammo < StartingAmmo)
+	{
+		bOutOfAmmo = false;
+		bIsReloading = true;
+		FTimerHandle Timer;
+		GetWorld()->GetTimerManager().SetTimer(Timer, this, &AFPSCharacter::ReloadTimerExpired, 2.f, false);
+		bReloadTimerExpired = false;
+	}
 }
 
 void AFPSCharacter::ReloadTimerExpired()
