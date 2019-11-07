@@ -49,7 +49,6 @@ AFPSCharacter::AFPSCharacter()
 	
 	GetMesh()->SetOwnerNoSee(true);
 	Ammo = StartingAmmo;
-
 }
 
 // Called when the game starts or when spawned
