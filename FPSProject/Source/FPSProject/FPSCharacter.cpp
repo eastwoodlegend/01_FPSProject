@@ -15,7 +15,7 @@
 #include "TimerManager.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "FPSBulletHole.h"
-#include "FPSHUD.h"
+#include "Kismet/GameplayStatics.h"
 
 //TODO remove after debug line testing.
 //#include "DrawDebugHelpers.h" 
@@ -87,11 +87,6 @@ void AFPSCharacter::Tick(float DeltaTime)
 	}
 }
 
-int32 AFPSCharacter::GetAmmo()
-{
-	return Ammo;
-}
-
 // Called to bind functionality to input
 void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -135,8 +130,6 @@ void AFPSCharacter::Fire()
 	if (!bOutOfAmmo && !bIsReloading)
 	{
 		--Ammo;
-		//HUD->UpdateAmmo(Ammo);
-		UE_LOG(LogTemp, Warning, TEXT("Rounds Left: %i"), Ammo);
 		MuzzleFlash->ActivateSystem(false);
 		if (bAutoFire)
 		{
@@ -145,7 +138,7 @@ void AFPSCharacter::Fire()
 			GetWorld()->GetTimerManager().SetTimer(Timer, this, &AFPSCharacter::TimerExpired, 1.f - RateOfFire, false);
 			bTimerExpired = false;
 		}
-		UE_LOG(LogTemp, Warning, TEXT("Fired at time: %f"), GetWorld()->GetTimeSeconds());
+
 		UPrimitiveComponent* PrimComp = nullptr;
 		if (ActorHit)
 		{
@@ -156,9 +149,8 @@ void AFPSCharacter::Fire()
 			PrimComp->bIgnoreRadialImpulse = true;
 			PrimComp->AddImpulseAtLocation(Hit.Location * Magnitude, Hit.ImpactPoint);
 			UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *ActorHit->GetName());
-			auto BulletHoleMark = GetWorld()->SpawnActor<AFPSBulletHole>(BulletHole, Hit.Location, FRotator::ZeroRotator);
+			auto BulletHoleMark = GetWorld()->SpawnActor<AFPSBulletHole>(BulletHole, Hit.Location, Hit.ImpactNormal.Rotation());
 			BulletHoleMark->AttachToActor(ActorHit, FAttachmentTransformRules::KeepWorldTransform, NAME_None);
-			
 		}
 
 		if (Ammo == 0)
@@ -169,23 +161,12 @@ void AFPSCharacter::Fire()
 	if(bOutOfAmmo)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Out of Ammo!!"));
+		Reload();
 	}
 	if (bIsReloading)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Reloading!"));
-	}
-
-	
-}
-
-void AFPSCharacter::EndAutoFire()
-{
-	bEndAutoFire = true;
-}
-
-void AFPSCharacter::TimerExpired()
-{
-	bTimerExpired = true;
+	}	
 }
 
 void AFPSCharacter::Reload()
@@ -200,8 +181,23 @@ void AFPSCharacter::Reload()
 	}
 }
 
+void AFPSCharacter::EndAutoFire()
+{
+	bEndAutoFire = true;
+}
+
+void AFPSCharacter::TimerExpired()
+{
+	bTimerExpired = true;
+}
+
 void AFPSCharacter::ReloadTimerExpired()
 {
 	bReloadTimerExpired = true;
 	Ammo = StartingAmmo;
+}
+
+int32 AFPSCharacter::GetAmmo()
+{
+	return Ammo;
 }

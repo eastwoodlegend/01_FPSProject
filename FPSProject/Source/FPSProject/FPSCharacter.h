@@ -87,7 +87,7 @@ public:
 	FHitResult Hit;
 	AActor* ActorHit = nullptr;
 
-	float Magnitude = 100.f;
+	float Magnitude = 10.f;
 
 	bool bAutoFire = true;
 	float RateOfFire = .95f;

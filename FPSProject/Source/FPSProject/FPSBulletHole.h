@@ -6,6 +6,7 @@
 #include "Engine/DecalActor.h"
 #include "FPSBulletHole.generated.h"
 
+
 /**
  * 
  */
@@ -14,4 +15,5 @@ class FPSPROJECT_API AFPSBulletHole : public ADecalActor
 {
 	GENERATED_BODY()
 	
+
 };
